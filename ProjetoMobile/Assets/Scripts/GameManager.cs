@@ -1,15 +1,29 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //Singleton
+    private static GameManager instance;
+    public static GameManager Instance => instance;
+
+
     [SerializeField] private GameObject obstaculo;
     public float tempoSpawn;
     public bool gameOver;
 
+    [Header("Sistema de Pontos")]
+    public TextMeshProUGUI txtMeshPro;
+    private int pontuacao;
+    private float tempoPontos;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        instance = this;
+
+
         tempoSpawn = 2f;
         gameOver = false;
         StartCoroutine(SpawnObstaculo());
@@ -18,7 +32,21 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+      if(gameOver == true)
+        {
+            return;
+        }
+        else
+        {
+            tempoPontos += Time.deltaTime;
+            Debug.Log(pontuacao);
+            if (tempoPontos >= 1f)
+            {
+                pontuacao++;
+                txtMeshPro.text = $"Pontuação: {pontuacao}";
+                tempoPontos = 0f;
+            }
+        }
     }
 
     private IEnumerator SpawnObstaculo()
@@ -37,5 +65,10 @@ public class GameManager : MonoBehaviour
             }
             yield return new WaitForSeconds(tempoSpawn);
         }
+    }
+
+    public void GameOver()
+    {
+        gameOver = true;
     }
 }

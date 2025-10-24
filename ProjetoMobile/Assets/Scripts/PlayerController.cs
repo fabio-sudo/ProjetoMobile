@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstaculo"))
         {
             Destroy(gameObject);
+            GameManager.Instance.GameOver();
             Debug.Log("Game Over");
         }
     }
