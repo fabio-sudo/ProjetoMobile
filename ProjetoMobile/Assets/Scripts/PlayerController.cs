@@ -1,18 +1,26 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private CinemachineImpulseSource _impulseSource;
 
+   
     [Header("Movimentação")]
     [Range(0,10)]
     public float speed = 3f;
     public float maxSpeed = 3f;
     private Rigidbody rb;
 
+    [Header("Particulas")]
+    public ParticleSystem particulaDestruicao;
+
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
 
     }
 
@@ -45,8 +53,10 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstaculo"))
         {
+            Instantiate(particulaDestruicao,transform.position, Quaternion.identity);
             Destroy(gameObject);
             GameManager.Instance.GameOver();
+            _impulseSource.GenerateImpulse();
             Debug.Log("Game Over");
         }
     }

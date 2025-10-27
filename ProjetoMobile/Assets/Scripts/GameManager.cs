@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
         else
         {
             tempoPontos += Time.deltaTime;
-            Debug.Log(pontuacao);
             if (tempoPontos >= 1f)
             {
                 pontuacao++;
