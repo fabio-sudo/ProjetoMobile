@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     private int pontuacao;
     private float tempoPontos;
 
+    [Header("Painel Pause")]
+    public GameObject painelPause;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,11 +30,28 @@ public class GameManager : MonoBehaviour
         tempoSpawn = 2f;
         gameOver = false;
         StartCoroutine(SpawnObstaculo());
+        pontuacao = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if(Time.timeScale == 0)
+            {
+                StartCoroutine(ScaleTime(0, 1, 0.5f));
+                painelPause.SetActive(false);
+
+            }
+            else if(Time.timeScale == 1){
+
+                StartCoroutine(ScaleTime(1, 0, 0.5f));
+                painelPause.SetActive(true);
+            }
+        }
+
       if(gameOver == true)
         {
             return;
@@ -42,7 +62,7 @@ public class GameManager : MonoBehaviour
             if (tempoPontos >= 1f)
             {
                 pontuacao++;
-                txtMeshPro.text = $"Pontuação: {pontuacao}";
+                txtMeshPro.text = $"Pontos: {pontuacao}";
                 tempoPontos = 0f;
             }
         }
@@ -70,4 +90,31 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
     }
+
+    IEnumerator ScaleTime(float start, float end, float duration)
+    {
+        float lastTime = Time.realtimeSinceStartup;
+        float timer = 0.0f;
+
+        while (timer < duration)
+        {
+            Time.timeScale = Mathf.Lerp(start, end, timer / duration);
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+            timer += (Time.realtimeSinceStartup - lastTime);
+            lastTime = Time.realtimeSinceStartup;
+
+            yield return null;
+
+        }
+
+        Time.timeScale = end;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+    }
+
+    public void Enable()
+    {
+        gameObject.SetActive(true);
+    }
+
 }

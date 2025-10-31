@@ -10,8 +10,8 @@ public class Obstaculo : MonoBehaviour
 
     private void Start()
     {
-        var xRotation = Random.Range(0.5f, 1f);
-        rotation = new Vector3(xRotation, 0f, 0f);
+        var xRotation = Random.Range(90f, 180f);
+        rotation = new Vector3(xRotation, 0);
 
         _impulseSource = GetComponent<CinemachineImpulseSource>();
         _playerController = FindAnyObjectByType<PlayerController>();
@@ -19,14 +19,15 @@ public class Obstaculo : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(rotation);
+        transform.Rotate(rotation * Time.deltaTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Obstaculo")){
+
             Instantiate(deadParticula, transform.position,Quaternion.identity);
-            Destroy(gameObject);
+
 
             //Este trecho muda a força de impacto de acordo com a proximidade com o player
             if (_playerController != null)
@@ -38,6 +39,8 @@ public class Obstaculo : MonoBehaviour
                 //Gera o impulso fazendo a tela tremer
                 _impulseSource.GenerateImpulse(force);
             }
+
+            Destroy(gameObject);
         }
     }
 }
